@@ -75,7 +75,7 @@ $page->weeklyInterval()->withIp();
 $page->monthlyInterval()->withIp();
 ```
 
-Getting the pages by the most visited
+Getting the records by the most visited
 ```php
 // gets the total visit count
 $page = Page::withTotalVisitCount()->first();
@@ -93,8 +93,16 @@ return $pages->first()->visit_count;
 $pages = Page::popularLastDays(2)->get();
 retutn $pages->first()->visit_count;
 
+// gets popular records by the last week
+$pages = Page::popularLastWeek()->get();
+return $pages->first()->visit_count;
+
 // gets popular records by this week
 $pages = Page::popularThisWeek()->get();
+return $pages->first()->visit_count;
+
+// gets popular records by the last month
+$pages = Page::popularLastMonth()->get();
 return $pages->first()->visit_count;
 
 // gets popular records by this month

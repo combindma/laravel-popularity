@@ -53,9 +53,25 @@ trait Visitable
         return $query->popularBetween(now()->subDays($days), now());
     }
 
+    public function scopePopularLastWeek(Builder $query): Builder
+    {
+        return $query->popularBetween(
+            $startOfLastWeek = now()->subDays(7)->startOfWeek(),
+            $startOfLastWeek->copy()->endOfWeek()
+        );
+    }
+
     public function scopePopularThisWeek(Builder $query): Builder
     {
         return $query->popularBetween(now()->startOfWeek(), now()->endOfWeek());
+    }
+
+    public function scopePopularLastMonth(Builder $query): Builder
+    {
+        return $query->popularBetween(
+            now()->startOfMonth()->subMonthWithoutOverflow(),
+            now()->subMonthWithoutOverflow()->endOfMonth()
+        );
     }
 
     public function scopePopularThisMonth(Builder $query): Builder

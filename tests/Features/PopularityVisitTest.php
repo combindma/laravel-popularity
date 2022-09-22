@@ -61,6 +61,24 @@ it('gets popular records by the last x days', function () {
         ->and($pages->first()->id)->toBe($pageId);
 });
 
+it('gets popular records by the last week', function () {
+    Page::insert([
+        ['title' => 'title'], ['title' => 'title'],
+    ]);
+    $pages = Page::all();
+    $pageId = $pages[0]->id;
+    Carbon::setTestNow(now()->subDays(7)->startOfWeek());
+    $pages[0]->visit();
+    Carbon::setTestNow();
+    $pages[1]->visit();
+
+    $pages = Page::popularLastWeek()->get();
+
+    expect($pages->count())->toBe(1)
+        ->and($pages->first()->visit_count)->toEqual(1)
+        ->and($pages->first()->id)->toBe($pageId);
+});
+
 it('gets popular records by this week', function () {
     Page::insert([
         ['title' => 'title'], ['title' => 'title'],
@@ -73,6 +91,23 @@ it('gets popular records by this week', function () {
     $pages[1]->visit();
 
     $pages = Page::popularThisWeek()->get();
+    expect($pages->count())->toBe(1)
+        ->and($pages->first()->visit_count)->toEqual(1)
+        ->and($pages->first()->id)->toBe($pageId);
+});
+
+it('gets popular records by the last month', function () {
+    Page::insert([
+        ['title' => 'title'], ['title' => 'title'],
+    ]);
+    $pages = Page::all();
+    $pageId = $pages[0]->id;
+    Carbon::setTestNow(now()->subMonth()->startOfMonth());
+    $pages[0]->visit();
+    Carbon::setTestNow();
+    $pages[1]->visit();
+
+    $pages = Page::popularLastMonth()->get();
     expect($pages->count())->toBe(1)
         ->and($pages->first()->visit_count)->toEqual(1)
         ->and($pages->first()->id)->toBe($pageId);
