@@ -18,7 +18,7 @@ composer require combindma/laravel-popularity
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-popularity-migrations"
+php artisan vendor:publish --tag="popularity-migrations"
 php artisan migrate
 ```
 
