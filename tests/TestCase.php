@@ -1,26 +1,21 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Combindma\Popularity\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Combindma\Popularity\PopularityServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
 
 class TestCase extends Orchestra
 {
     protected function setUp(): void
     {
         parent::setUp();
-
-        /*Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );*/
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
-            SkeletonServiceProvider::class,
+            PopularityServiceProvider::class,
         ];
     }
 
@@ -33,9 +28,10 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
         config()->set('app.locale', 'fr');
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
+
+        $page = include __DIR__.'/migrations/create_page_table.php';
+        $migration = include __DIR__.'/../database/migrations/create_visits_table.php.stub';
+        $page->up();
         $migration->up();
-        */
     }
 }

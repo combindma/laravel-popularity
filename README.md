@@ -1,60 +1,109 @@
-# :package_description
+# A Laravel package for tracking popular entries(by Models) of a website in a certain time
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/run-tests?label=tests)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/combindma/laravel-popularity.svg?style=flat-square)](https://packagist.org/packages/combindma/laravel-popularity)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/combindma/laravel-popularity/run-tests?label=tests)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/combindma/laravel-popularity/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/combindma/laravel-popularity.svg?style=flat-square)](https://packagist.org/packages/combindma/laravel-popularity)
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+With Laravel Popularity Package you can Track your most popular Eloquent Models based on unique hits in a time range and then sort by popularity in a time frame.With Laravel Popular Package you can Track your most popular Eloquent Models based on unique hits in a time range and then sort by popularity in a time frame.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require combindma/laravel-popularity
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --tag="laravel-popularity-migrations"
 php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag=":package_slug-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
 ```
 
 ## Usage
 
+Use the visitable trait on the model you intend to track
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+use Combindma\Popularity\Traits\Visitable;
+
+class Page extends Model
+{
+    use Visitable;
+
+    ...
+}
+```
+
+This is how you create a visit (visits are not duplicated for a daily timeframe):
+```php
+// Adding a visit to the page.
+$page->visit();
+
+// Adding a visit to the page with ip address.
+$page->visit()->withIp();
+
+// Adding a visit with the given ip address.
+$page->visit()->withIp('my-ip-address');
+
+// Adding a visit with custom data.
+$page->visit()->withData(['item' => 'value']);
+
+// Adding a visit with logged user.
+$page->visit()->withUser();
+
+// Adding a visit with the given user.
+$page->visit()->withUser($userId);
+
+// Adding a visit with all above methods.
+$page->visit()->withIp()->withUser()->withData(['item' => 'value']);
+```
+
+Changing the timeframe for creating visits with the same data:
+```php
+// creates visits after hourly timeframe
+$page->hourlyInterval()->withIp();
+
+// creates visits after a daily timeframe
+$page->dailyInterval()->withIp();
+
+// creates visits after a weekly timeframe
+$page->weeklyInterval()->withIp();
+
+// creates visits after a monthly timeframe
+$page->monthlyInterval()->withIp();
+```
+
+Getting the pages by the most visited
+```php
+// gets the total visit count
+$page = Page::withTotalVisitCount()->first();
+return $page->visit_count_total;
+
+// gets records by all time popularity
+$pages = Page::popularAlltime()->get();
+return $pages->first()->visit_count_total;
+
+// gets popular records between two dates
+$pages = Page::popularBetween(Carbon::createFromDate(1990, 12, 01), Carbon::createFromDate(1990, 12, 04))->get();
+return $pages->first()->visit_count;
+
+// gets popular records by the last x days
+$pages = Page::popularLastDays(2)->get();
+retutn $pages->first()->visit_count;
+
+// gets popular records by this week
+$pages = Page::popularThisWeek()->get();
+return $pages->first()->visit_count;
+
+// gets popular records by this month
+$pages = Page::popularThisMonth()->get();
+return $pages->first()->visit_count;
+
+// gets popular records by this year
+$pages = Page::popularThisYear()->get();
+return $pages->first()->visit_count;
 ```
 
 ## Testing
@@ -62,10 +111,6 @@ echo $variable->echoPhrase('Hello, VendorName!');
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -77,7 +122,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Combind](https://github.com/combindma)
 - [All Contributors](../../contributors)
 
 ## License
