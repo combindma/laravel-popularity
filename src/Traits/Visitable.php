@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Combindma\Popularity\Models\Visit;
 use Combindma\Popularity\PendingVisit;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Visitable
 {
@@ -21,66 +22,69 @@ trait Visitable
     /**
      * Setting relationship
      */
-    public function visits(): mixed
+    public function visits(): MorphMany
     {
         return $this->morphMany(Visit::class, 'visitable');
     }
 
-    public function scopeWithTotalVisitCount(Builder $query): Builder
+    public function scopeWithTotalVisitCount(Builder $query)
     {
-        return $query->withCount('visits as visit_count_total');
+        $query->withCount('visits as visit_count_total');
     }
 
-    public function scopePopularAllTime(Builder $query): Builder
+    public function scopePopularAllTime(Builder $query)
     {
-        return $query->withTotalVisitCount()->orderBy('visit_count_total', 'desc');
+        $query->withTotalVisitCount()->orderBy('visit_count_total', 'desc');
     }
 
-    public function scopePopularBetween(Builder $query, Carbon $from, Carbon $to): Builder
+    public function scopePopularLastDays(Builder $query, int $days)
     {
-        return $query->whereHas('visits', function ($query) use ($from, $to) {
-            $query->whereBetween('created_at', [$from, $to]);
-        })
-            ->withCount([
-                'visits as visit_count' => function ($query) use ($from, $to) {
-                    $query->whereBetween('created_at', [$from, $to]);
-                },
-            ]);
+        $query->popularBetween(now()->subDays($days), now());
     }
 
-    public function scopePopularLastDays(Builder $query, int $days): Builder
+    public function scopePopularLastWeek(Builder $query)
     {
-        return $query->popularBetween(now()->subDays($days), now());
-    }
-
-    public function scopePopularLastWeek(Builder $query): Builder
-    {
-        return $query->popularBetween(
+        $query->popularBetween(
             $startOfLastWeek = now()->subDays(7)->startOfWeek(),
             $startOfLastWeek->copy()->endOfWeek()
         );
     }
 
-    public function scopePopularThisWeek(Builder $query): Builder
+    public function scopePopularThisWeek(Builder $query)
     {
-        return $query->popularBetween(now()->startOfWeek(), now()->endOfWeek());
+        $query->popularBetween(now()->startOfWeek(), now()->endOfWeek());
     }
 
-    public function scopePopularLastMonth(Builder $query): Builder
+    public function scopePopularLastMonth(Builder $query)
     {
-        return $query->popularBetween(
+        $query->popularBetween(
             now()->startOfMonth()->subMonthWithoutOverflow(),
             now()->subMonthWithoutOverflow()->endOfMonth()
         );
     }
 
-    public function scopePopularThisMonth(Builder $query): Builder
+    public function scopePopularThisMonth(Builder $query)
     {
-        return $query->popularBetween(now()->startOfMonth(), now()->endOfMonth());
+        $query->popularBetween(now()->startOfMonth(), now()->endOfMonth());
     }
 
-    public function scopePopularThisYear(Builder $query): Builder
+    public function scopePopularThisYear(Builder $query)
     {
-        return $query->popularBetween(now()->startOfYear(), now()->endOfYear());
+        $query->popularBetween(now()->startOfYear(), now()->endOfYear());
+    }
+
+    public function scopePopularBetween(Builder $query, Carbon $from, Carbon $to)
+    {
+        $query->whereHas('visits', $this->betweenScope($from, $to))
+            ->withCount([
+                'visits as visit_count' => $this->betweenScope($from, $to),
+            ]);
+    }
+
+    protected function betweenScope(Carbon $from, Carbon $to)
+    {
+        return function ($query) use ($from, $to) {
+            $query->whereBetween('created_at', [$from, $to]);
+        };
     }
 }
