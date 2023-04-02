@@ -4,7 +4,6 @@ use Carbon\Carbon;
 use Combindma\Popularity\Models\Visit;
 use Combindma\Popularity\Tests\Models\Page;
 use Combindma\Popularity\Tests\Models\User;
-use function Pest\Faker\faker;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 
@@ -39,7 +38,7 @@ it('creates a visit with custom data', function () {
 
 it('creates a visit with the default user', function () {
     $page = Page::create();
-    $user = new User(['id' => faker()->randomNumber()]);
+    $user = new User(['id' => fake()->randomNumber()]);
     actingAs($user);
     $page->visit()->withUser();
     $visit = Visit::first();
@@ -50,7 +49,7 @@ it('creates a visit with the default user', function () {
 
 it('creates a visit with the given user', function () {
     $page = Page::create();
-    $user = new User(['id' => faker()->randomNumber()]);
+    $user = new User(['id' => fake()->randomNumber()]);
     $page->visit()->withUser($user->id);
     $visit = Visit::first();
     assertDatabaseCount('visits', 1);
@@ -60,7 +59,7 @@ it('creates a visit with the given user', function () {
 
 it('creates a visit with custom data, ip address and logged user', function () {
     $page = Page::create();
-    $user = new User(['id' => faker()->randomNumber()]);
+    $user = new User(['id' => fake()->randomNumber()]);
     actingAs($user);
     $page->visit()->withIp()->withUser()->withData(['item' => 'value']);
     $visit = Visit::first();
