@@ -1,8 +1,8 @@
 # A Laravel package for tracking popular entries(by Models) of a website in a certain time
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/combindma/laravel-popularity.svg?style=flat-square)](https://packagist.org/packages/combindma/laravel-popularity)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/combindma/laravel-popularity/run-tests?label=tests)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/combindma/laravel-popularity/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/combindma/laravel-popularity/run-tests?label=tests)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/combindma/laravel-popularity/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/combindma/laravel-popularity/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/combindma/laravel-popularity.svg?style=flat-square)](https://packagist.org/packages/combindma/laravel-popularity)
 
 With Laravel Popularity Package you can Track your most popular Eloquent Models based on unique hits in a time range and then sort by popularity in a time frame.With Laravel Popular Package you can Track your most popular Eloquent Models based on unique hits in a time range and then sort by popularity in a time frame.

@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Combindma\Popularity\Models\Visit;
 use Combindma\Popularity\Tests\Models\Page;
 use Combindma\Popularity\Tests\Models\User;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 

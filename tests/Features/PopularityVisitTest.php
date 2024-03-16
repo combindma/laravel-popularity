@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Combindma\Popularity\Tests\Models\Page;
+
 use function Pest\Laravel\assertDatabaseCount;
 
 it('gets the total visit count', function () {

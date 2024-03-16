@@ -20,7 +20,7 @@ class PendingVisit
         $this->dailyInterval();
     }
 
-    public function withIp(string $ip = null): self
+    public function withIp(?string $ip = null): self
     {
         $this->attributes['ip'] = $ip ?? request()->ip();
 
@@ -34,7 +34,7 @@ class PendingVisit
         return $this;
     }
 
-    public function withUser(int $userId = null): self
+    public function withUser(?int $userId = null): self
     {
         $this->attributes['user_id'] = $userId ?? auth()->id();
 
